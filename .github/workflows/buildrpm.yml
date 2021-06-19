@@ -1,0 +1,30 @@
+name: container
+on: push
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    container:
+      image: centos:8
+      volumes:
+        - ${{ github.workspace }}:/workspace
+
+    steps:
+         - name: Check out repository
+           uses: actions/checkout@v2
+         - name: Build ImageMagick7 for UBI
+           run: |
+             dnf install -y rpm-build git rpmdevtools 'dnf-command(builddep)' make gcc
+             git clone https://git.remirepo.net/git/rpms/ImageMagick7.git
+             cd ImageMagick7
+             patch --verbose -p1 < /workspace/ubi.patch
+             rpmdev-setuptree
+             spectool --sourcedir -g *.spec
+             rpmbuild -bs *.spec
+             dnf builddep --enablerepo=powertools -y ~/rpmbuild/SRPMS/*.src.rpm
+             rpmbuild --rebuild ~/rpmbuild/SRPMS/*.src.rpm \
+         - name: Upload RPMS
+           uses: actions/upload-artifact@v2
+           with:
+             name: rpms
+             path: ~/rpmbuild/RPMS/*/*.rpm

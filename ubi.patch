@@ -1,0 +1,36 @@
+diff --git a/ImageMagick7.spec b/ImageMagick7.spec
+index d5b7b19..5a88b72 100644
+--- a/ImageMagick7.spec
++++ b/ImageMagick7.spec
+@@ -14,17 +14,17 @@
+ %global libsuffixe -7.Q16HDRI
+ %bcond_without tests
+ 
+-%global with_djvu  1
++%global with_djvu  0
+ %global with_webp  1
+ %global with_jp2   1
+ %global with_jbig  1
+ %global with_gslib 1
+-%global with_raw   1
+-%global with_raqm  1
+-%global with_gvc   1
++%global with_raw   0
++%global with_raqm  0
++%global with_gvc   0
+ 
+ %if 0%{?fedora} || 0%{?rhel} >= 8
+-%global with_lqr   1
++%global with_lqr   0
+ %else
+ %global with_lqr   0
+ %endif
+@@ -117,7 +117,7 @@ BuildRequires:  libraqm-devel
+ BuildRequires:  liblqr-1-devel
+ %endif
+ # Ensure latest version is used
+-BuildRequires:  pkgconfig(libzip) >= 1.7
++BuildRequires:  pkgconfig(libzip)
+ # For tests
+ BuildRequires:  urw-base35-fonts
+ BuildRequires:  open-sans-fonts
